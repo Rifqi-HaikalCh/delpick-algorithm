@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Del-Pick - Visualisasi Algoritma Euclidean Distance & Haversine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .main-logo {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Navigation Tabs */
+        .nav-container {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-tabs {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #2c3e50;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            min-height: calc(100vh - 200px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Page Styles */
+        .home-content {
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-description {
+            font-size: 20px;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #3498db;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-usage {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e67e22;
+        }
+
+        .feature-usage-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 8px;
+        }
+
+        .problem-solution-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .problem-description, .solution-description {
+            color: #555;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Euclidean Styles (dari main.html) */
+        .euclidean-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            overflow: hidden;
+        }
+
+        .euclidean-header {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .euclidean-logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .euclidean-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .euclidean-main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 0;
+            min-height: 700px;
+        }
+
+        .euclidean-map-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .euclidean-calculation-section {
+            padding: 30px;
+            background: white;
+        }
+
+        .euclidean-section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .euclidean-map-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #e8f5e8;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .euclidean-map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(76, 175, 80, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(76, 175, 80, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .euclidean-location {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid white;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .euclidean-store {
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            line-height: 34px;
+        }
+
+        .euclidean-driver {
+            width: 30px;
+            height: 30px;
+            background: #4ecdc4;
+            line-height: 24px;
+            font-size: 10px;
+        }
+
+        .euclidean-driver.available {
+            background: #4ecdc4;
+        }
+
+        .euclidean-driver.in-radius {
+            background: #3498db;
+            animation: pulse 2s infinite;
+        }
+
+        .euclidean-driver.nearest {
+            background: #2ecc71;
+            animation: selected 1s ease-in-out;
+        }
+
+        .euclidean-driver.out-of-range {
+            background: #95a5a6;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes selected {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        .euclidean-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .euclidean-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .euclidean-btn-primary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .euclidean-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .euclidean-btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .euclidean-btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .euclidean-driver-list {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4ecdc4;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .euclidean-step {
+            margin-bottom: 20px;
+            opacity: 0.3;
+            transition: all 0.5s ease;
+        }
+
+        .euclidean-step.active {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .euclidean-step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #4ecdc4;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .euclidean-step-formula {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .euclidean-step-result {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .euclidean-step-result.fastest {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .euclidean-algorithm-info {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .euclidean-algorithm-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .euclidean-algorithm-desc {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .euclidean-final-result {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .euclidean-final-result.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .euclidean-result-driver {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .euclidean-result-distance {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .euclidean-result-time {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .euclidean-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .euclidean-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .euclidean-legend-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .euclidean-performance-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+        }
+
+        .euclidean-performance-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* Haversine Styles (dari haversine.html) */
+        .haversine-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            overflow: hidden;
+        }
+
+        .haversine-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .haversine-logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .haversine-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .haversine-main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        .haversine-map-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .haversine-calculation-section {
+            padding: 30px;
+            background: white;
+        }
+
+        .haversine-section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .haversine-map-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #e3f2fd;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #2196f3;
+            margin-bottom: 20px;
+        }
+
+        .haversine-map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(33, 150, 243, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(33, 150, 243, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .haversine-location {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid white;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .haversine-store {
+            width: 35px;
+            height: 35px;
+            background: #ff6b6b;
+            line-height: 29px;
+        }
+
+        .haversine-store.selected {
+            animation: pulse 2s infinite;
+            transform: scale(1.2);
+        }
+
+        .haversine-customer {
+            width: 40px;
+            height: 40px;
+            background: #2ecc71;
+            line-height: 34px;
+        }
+
+        .haversine-distance-line {
+            position: absolute;
+            background: #3498db;
+            height: 3px;
+            transform-origin: left center;
+            z-index: 5;
+            opacity: 0.8;
+        }
+
+        .haversine-distance-label {
+            position: absolute;
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 15;
+            transform: translate(-50%, -50%);
+        }
+
+        .haversine-store-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .haversine-store-item {
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .haversine-store-item:hover {
+            background: #f8f9fa;
+            border-color: #3498db;
+        }
+
+        .haversine-store-item.active {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .haversine-store-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .haversine-store-coords {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .haversine-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .haversine-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .haversine-btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .haversine-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .haversine-btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .haversine-btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .haversine-calculation-steps {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .haversine-step {
+            margin-bottom: 20px;
+            opacity: 0.3;
+            transition: all 0.5s ease;
+        }
+
+        .haversine-step.active {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .haversine-step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .haversine-step-formula {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .haversine-step-result {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .haversine-step-result.fastest {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .haversine-algorithm-info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .haversine-algorithm-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .haversine-algorithm-desc {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .haversine-final-result {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .haversine-final-result.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .haversine-result-distance {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .haversine-result-cost {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .haversine-result-formula {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .haversine-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .haversine-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .haversine-legend-icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .euclidean-main-content,
+            .haversine-main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .euclidean-map-section,
+            .haversine-map-section {
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-container {
+                margin: 10px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .euclidean-legend,
+            .haversine-legend {
+                grid-template-columns: 1fr;
+            }
+            
+            .euclidean-controls,
+            .haversine-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .euclidean-driver-list,
+            .haversine-store-list {
+                max-height: 200px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-description {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+    <div class="main-header">
+        <div class="main-logo">🏍️ Del-Pick</div>
+        <div class="main-subtitle">Sistem Delivery dengan Algoritma Euclidean Distance & Haversine</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('home')">🏠 Beranda</button>
+            <button class="nav-tab" onclick="showTab('euclidean')">📐 Euclidean Distance</button>
+            <button class="nav-tab" onclick="showTab('haversine')">🌍 Haversine Formula</button>
+        </div>
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <!-- Home Tab Content -->
+        <div id="home" class="tab-content active">
+            <div class="home-content">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="hero-title">Del-Pick</div>
+                    <div class="hero-description">
+                        Aplikasi jasa pengantaran yang mengatasi tantangan logistik sivitas akademika Institut Teknologi Del 
+                        dengan mengintegrasikan teknologi algoritma untuk optimasi pencarian driver dan perhitungan jarak pengiriman.
+                    </div>
+                </div>
+
+                <!-- Problem & Solution Section -->
+                <div class="problem-solution-section">
+                    <div class="section-title">🎯 Latar Belakang Masalah</div>
+                    <div class="problem-description">
+                        Institut Teknologi Del (IT Del) yang berlokasi di Sitoluama, Kabupaten Toba, menerapkan sistem wajib berasrama. 
+                        Kondisi geografis kampus yang berjarak <span class="highlight">±10 kilometer dari pusat Kota Balige</span> 
+                        menciptakan tantangan signifikan bagi sivitas akademika dalam memenuhi kebutuhan sehari-hari.
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">73%</div>
+                            <div class="stat-label">Responden Sering Butuh Jasa Pengantaran</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">94.2%</div>
+                            <div class="stat-label">Tidak Memiliki Kendaraan Pribadi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">71%</div>
+                            <div class="stat-label">Kesulitan Mendapat Transportasi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">10 km</div>
+                            <div class="stat-label">Jarak Kampus ke Kota Balige</div>
+                        </div>
+                    </div>
+
+                    <div class="solution-description">
+                        <strong>Solusi Del-Pick:</strong> Mengembangkan aplikasi jasa pengantaran dengan sistem pengiriman (Delivery System) 
+                        yang mengintegrasikan <span class="highlight">Algoritma Euclidean Distance</span> dan 
+                        <span class="highlight">Haversine Formula</span> untuk mengatasi masalah jarak dan ketepatan lokasi.
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="features-grid">
+                    <!-- Euclidean Distance Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon">📐</div>
+                        <div class="feature-title">Euclidean Distance Algorithm</div>
+                        <div class="feature-description">
+                            Algoritma untuk menghitung jarak garis lurus antara dua titik koordinat. 
+                            Memberikan perhitungan cepat dan efisien untuk pencarian dalam radius terbatas.
+                        </div>
+                        <div class="feature-usage">
+                            <div class="feature-usage-title">Penggunaan dalam Del-Pick:</div>
+                            • Mencari driver terdekat dari toko dalam radius <strong>5 km</strong><br>
+                            • Waktu pencarian maksimal <strong>15 menit</strong><br>
+                            • Optimasi untuk pencarian real-time dengan kompleksitas O(1)<br>
+                            • Ideal untuk area geografis terbatas sekitar kampus IT Del
+                        </div>
+                    </div>
+
+                    <!-- Haversine Formula Feature -->
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-title">Haversine Formula</div>
+                        <div class="feature-description">
+                            Formula untuk menghitung jarak antara dua titik di permukaan bumi berdasarkan 
+                            koordinat latitude dan longitude dengan mempertimbangkan kelengkungan bumi.
+                        </div>
+                        <div class="feature-usage">
+                            <div class="feature-usage-title">Penggunaan dalam Del-Pick:</div>
+                            • Menghitung jarak aktual dari toko ke lokasi pemesan (IT Del)<br>
+                            • Perhitungan biaya ongkos kirim <strong>Rp. 2.000 per kilometer</strong><br>
+                            • Estimasi waktu dan biaya pengiriman yang akurat<br>
+                            • Mempertimbangkan kelengkungan bumi untuk presisi tinggi
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integration Benefits -->
+                <div class="problem-solution-section">
+                    <div class="section-title">🚀 Keunggulan Integrasi Algoritma</div>
+                    <div class="solution-description">
+                        Kombinasi kedua algoritma ini memberikan solusi optimal untuk <span class="highlight">Delivery System</span> 
+                        pada aplikasi Del-Pick. Euclidean Distance memberikan kecepatan dalam pencarian driver, 
+                        sementara Haversine Formula memberikan akurasi dalam perhitungan jarak dan biaya pengiriman.
+                        
+                        <br><br>
+                        
+                        Dengan integrasi teknologi yang komprehensif, Del-Pick diharapkan dapat secara efektif 
+                        menyelesaikan masalah logistik dan transportasi yang selama ini membatasi sivitas akademika IT Del, 
+                        memungkinkan mereka untuk memenuhi kebutuhan sehari-hari dengan <span class="highlight">lebih efisien dan menghemat waktu produktif</span>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Euclidean Distance Tab Content -->
+        <div id="euclidean" class="tab-content">
+            <div class="euclidean-container">
+                <div class="euclidean-header">
+                    <div class="euclidean-logo">🏍️ DelPick</div>
+                    <div class="euclidean-subtitle">Visualisasi Euclidean Distance - Pencarian Driver Terdekat</div>
+                </div>
+
+                <div class="euclidean-main-content">
+                    <div class="euclidean-map-section">
+                        <div class="euclidean-section-title">
+                            🗺️ Peta Pencarian Driver dalam Radius 5 KM
+                        </div>
+                        
+                        <div class="euclidean-map-container" id="euclideanMapContainer">
+                            <div class="euclidean-map-grid"></div>
+                        </div>
+
+                        <div class="euclidean-controls">
+                            <button class="euclidean-btn euclidean-btn-primary" onclick="euclideanFindNearestDriver()">🔍 Cari Driver Terdekat</button>
+                            <button class="euclidean-btn euclidean-btn-secondary" onclick="euclideanResetSearch()">🔄 Reset</button>
+                            <button class="euclidean-btn euclidean-btn-secondary" onclick="euclideanGenerateRandomDrivers()">🎲 Acak Driver</button>
+                        </div>
+
+                        <div class="euclidean-driver-list" id="euclideanDriverList">
+                            <div style="text-align: center; color: #6c757d; padding: 20px;">
+                                Daftar driver akan muncul di sini
+                            </div>
+                        </div>
+
+                        <div class="euclidean-legend">
+                            <div class="euclidean-legend-item">
+                                <div class="euclidean-legend-icon" style="background: #ff6b6b;"></div>
+                                <span>Toko</span>
+                            </div>
+                            <div class="euclidean-legend-item">
+                                <div class="euclidean-legend-icon" style="background: #4ecdc4;"></div>
+                                <span>Driver Tersedia</span>
+                            </div>
+                            <div class="euclidean-legend-item">
+                                <div class="euclidean-legend-icon" style="background: #3498db;"></div>
+                                <span>Dalam Radius</span>
+                            </div>
+                            <div class="euclidean-legend-item">
+                                <div class="euclidean-legend-icon" style="background: #2ecc71;"></div>
+                                <span>Driver Terdekat</span>
+                            </div>
+                            <div class="euclidean-legend-item">
+                                <div class="euclidean-legend-icon" style="background: #95a5a6;"></div>
+                                <span>Di Luar Radius</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="euclidean-calculation-section">
+                        <div class="euclidean-algorithm-info">
+                            <div class="euclidean-algorithm-title">📐 Euclidean Distance Algorithm</div>
+                            <div class="euclidean-algorithm-desc">
+                                Algoritma untuk menghitung jarak garis lurus antara dua titik koordinat.
+                                Digunakan untuk pencarian driver terdekat dengan perhitungan cepat.
+                            </div>
+                        </div>
+
+                        <div class="euclidean-section-title">
+                            🧮 Langkah Perhitungan Euclidean
+                        </div>
+
+                        <div class="euclidean-calculation-steps" id="euclideanCalculationSteps">
+                            <div class="euclidean-step" id="euclideanStep1">
+                                <span class="euclidean-step-number">1</span>
+                                <strong>Selisih Koordinat</strong>
+                                <div class="euclidean-step-formula" id="euclideanStep1Formula">
+                                    dx = lat₂ - lat₁<br>
+                                    dy = lon₂ - lon₁
+                                </div>
+                                <div class="euclidean-step-result" id="euclideanStep1Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="euclidean-step" id="euclideanStep2">
+                                <span class="euclidean-step-number">2</span>
+                                <strong>Kuadrat Selisih</strong>
+                                <div class="euclidean-step-formula" id="euclideanStep2Formula">
+                                    dx² = (lat₂ - lat₁)²<br>
+                                    dy² = (lon₂ - lon₁)²
+                                </div>
+                                <div class="euclidean-step-result" id="euclideanStep2Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="euclidean-step" id="euclideanStep3">
+                                <span class="euclidean-step-number">3</span>
+                                <strong>Euclidean Distance</strong>
+                                <div class="euclidean-step-formula" id="euclideanStep3Formula">
+                                    d = √(dx² + dy²)
+                                </div>
+                                <div class="euclidean-step-result" id="euclideanStep3Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="euclidean-step" id="euclideanStep4">
+                                <span class="euclidean-step-number">4</span>
+                                <strong>Konversi ke Kilometer</strong>
+                                <div class="euclidean-step-formula" id="euclideanStep4Formula">
+                                    Jarak = d × 111.39 km<br>
+                                    (1 derajat ≈ 111.39 km)
+                                </div>
+                                <div class="euclidean-step-result" id="euclideanStep4Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="euclidean-step" id="euclideanStep5">
+                                <span class="euclidean-step-number">5</span>
+                                <strong>Filter Radius 5 KM</strong>
+                                <div class="euclidean-step-formula" id="euclideanStep5Formula">
+                                    if (jarak ≤ 5 km) → Driver tersedia<br>
+                                    else → Driver di luar jangkauan
+                                </div>
+                                <div class="euclidean-step-result" id="euclideanStep5Result">Menunggu perhitungan...</div>
+                            </div>
+                        </div>
+
+                        <div class="euclidean-performance-info">
+                            <div class="euclidean-performance-title">⚡ Keunggulan Euclidean Distance:</div>
+                            <div>• Perhitungan sangat cepat (O(1) complexity)</div>
+                            <div>• Ideal untuk pencarian dalam radius kecil</div>
+                            <div>• Efisien untuk real-time driver matching</div>
+                            <div>• Minimal computational overhead</div>
+                        </div>
+
+                        <div class="euclidean-final-result" id="euclideanFinalResult">
+                            <div class="euclidean-result-driver" id="euclideanResultDriver">Driver -</div>
+                            <div class="euclidean-result-distance" id="euclideanResultDistance">- km</div>
+                            <div class="euclidean-result-time" id="euclideanResultTime">Driver Terdekat Ditemukan!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Haversine Formula Tab Content -->
+        <div id="haversine" class="tab-content">
+            <div class="haversine-container">
+                <div class="haversine-header">
+                    <div class="haversine-logo">🏍️ DelPick</div>
+                    <div class="haversine-subtitle">Visualisasi Haversine Formula - Perhitungan Jarak & Biaya Pengiriman</div>
+                </div>
+
+                <div class="haversine-main-content">
+                    <div class="haversine-map-section">
+                        <div class="haversine-section-title">
+                            🗺️ Peta Kecamatan Balige - IT Del
+                        </div>
+                        
+                        <div class="haversine-map-container" id="haversineMapContainer">
+                            <div class="haversine-map-grid"></div>
+                        </div>
+
+                        <div class="haversine-controls">
+                            <button class="haversine-btn haversine-btn-primary" onclick="haversineCalculateDistance()">🧮 Hitung Jarak & Biaya</button>
+                            <button class="haversine-btn haversine-btn-secondary" onclick="haversineResetCalculation()">🔄 Reset</button>
+                        </div>
+
+                        <div class="haversine-store-list" id="haversineStoreList">
+                            <div style="text-align: center; color: #6c757d; padding: 20px;">
+                                Klik pada toko di peta atau pilih dari daftar
+                            </div>
+                        </div>
+
+                        <div class="haversine-legend">
+                            <div class="haversine-legend-item">
+                                <div class="haversine-legend-icon" style="background: #ff6b6b;"></div>
+                                <span>Toko</span>
+                            </div>
+                            <div class="haversine-legend-item">
+                                <div class="haversine-legend-icon" style="background: #2ecc71;"></div>
+                                <span>IT Del</span>
+                            </div>
+                            <div class="haversine-legend-item">
+                                <div class="haversine-legend-icon" style="background: #3498db;"></div>
+                                <span>Rute Pengiriman</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="haversine-calculation-section">
+                        <div class="haversine-algorithm-info">
+                            <div class="haversine-algorithm-title">🌍 Haversine Formula</div>
+                            <div class="haversine-algorithm-desc">
+                                Formula untuk menghitung jarak antara dua titik di permukaan bumi 
+                                dengan mempertimbangkan kelengkungan bumi untuk hasil yang akurat.
+                            </div>
+                        </div>
+
+                        <div class="haversine-section-title">
+                            🧮 Langkah Perhitungan Haversine
+                        </div>
+
+                        <div class="haversine-calculation-steps" id="haversineCalculationSteps">
+                            <div class="haversine-step" id="haversineStep1">
+                                <span class="haversine-step-number">1</span>
+                                <strong>Konversi ke Radian</strong>
+                                <div class="haversine-step-formula" id="haversineStep1Formula">
+                                    toRadians = degrees × (π / 180)<br>
+                                    dLat = (lat₂ - lat₁) × π/180<br>
+                                    dLon = (lon₂ - lon₁) × π/180
+                                </div>
+                                <div class="haversine-step-result" id="haversineStep1Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="haversine-step" id="haversineStep2">
+                                <span class="haversine-step-number">2</span>
+                                <strong>Perhitungan Haversine (a)</strong>
+                                <div class="haversine-step-formula" id="haversineStep2Formula">
+                                    a = sin²(dLat/2) + cos(lat₁) × cos(lat₂) × sin²(dLon/2)
+                                </div>
+                                <div class="haversine-step-result" id="haversineStep2Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="haversine-step" id="haversineStep3">
+                                <span class="haversine-step-number">3</span>
+                                <strong>Perhitungan Central Angle (c)</strong>
+                                <div class="haversine-step-formula" id="haversineStep3Formula">
+                                    c = 2 × atan2(√a, √(1-a))
+                                </div>
+                                <div class="haversine-step-result" id="haversineStep3Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="haversine-step" id="haversineStep4">
+                                <span class="haversine-step-number">4</span>
+                                <strong>Jarak dalam Kilometer</strong>
+                                <div class="haversine-step-formula" id="haversineStep4Formula">
+                                    D = R × c<br>
+                                    R = 6371 km (radius bumi)
+                                </div>
+                                <div class="haversine-step-result" id="haversineStep4Result">Menunggu perhitungan...</div>
+                            </div>
+
+                            <div class="haversine-step" id="haversineStep5">
+                                <span class="haversine-step-number">5</span>
+                                <strong>Perhitungan Biaya Pengiriman</strong>
+                                <div class="haversine-step-formula" id="haversineStep5Formula">
+                                    Biaya = Jarak × Rp 2.000/km
+                                </div>
+                                <div class="haversine-step-result" id="haversineStep5Result">Menunggu perhitungan...</div>
+                            </div>
+                        </div>
+
+                        <div class="haversine-final-result" id="haversineFinalResult">
+                            <div class="haversine-result-distance" id="haversineResultDistance">- km</div>
+                            <div class="haversine-result-cost" id="haversineResultCost">Rp -</div>
+                            <div class="haversine-result-formula" id="haversineResultFormula">Biaya = Jarak × Rp 2.000/km</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+
+            // Initialize the specific tab's functionality
+            if (tabName === 'euclidean') {
+                initEuclidean();
+            } else if (tabName === 'haversine') {
+                initHaversine();
+            }
+        }
+
+        // Euclidean Distance Implementation
+        class EuclideanVisualizer {
+            constructor() {
+                this.mapContainer = document.getElementById('euclideanMapContainer');
+                this.store = null;
+                this.drivers = [];
+                this.searchRadius = 5; // 5 km radius
+                this.isSearching = false;
+                this.distanceLines = [];
+                this.distanceLabels = [];
+                
+                // Area geografis Balige
+                this.mapBounds = {
+                    minLat: 2.320,
+                    maxLat: 2.350,
+                    minLon: 99.050,
+                    maxLon: 99.080
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.createStore();
+                this.generateRandomDrivers();
+                this.resetCalculationSteps();
+            }
+
+            createStore() {
+                // Toko di pusat peta
+                this.store = {
+                    lat: 2.335,
+                    lon: 99.065,
+                    name: 'Toko Pusat'
+                };
+                
+                this.renderStore();
+            }
+
+            renderStore() {
+                const existing = this.mapContainer.querySelector('.store');
+                if (existing) existing.remove();
+                
+                const storeElement = document.createElement('div');
+                storeElement.className = 'euclidean-location euclidean-store';
+                storeElement.textContent = '🏪';
+                storeElement.title = this.store.name;
+                
+                const position = this.coordToPixel(this.store.lat, this.store.lon);
+                storeElement.style.left = position.x + 'px';
+                storeElement.style.top = position.y + 'px';
+                
+                this.mapContainer.appendChild(storeElement);
+            }
+
+            generateRandomDrivers() {
+                this.drivers = [];
+                const driverCount = 8;
+                
+                for (let i = 0; i < driverCount; i++) {
+                    const driver = {
+                        id: i + 1,
+                        name: `Driver ${i + 1}`,
+                        lat: this.mapBounds.minLat + Math.random() * (this.mapBounds.maxLat - this.mapBounds.minLat),
+                        lon: this.mapBounds.minLon + Math.random() * (this.mapBounds.maxLon - this.mapBounds.minLon),
+                        status: 'available'
+                    };
+                    
+                    this.drivers.push(driver);
+                }
+                
+                this.renderDrivers();
+                this.updateDriverList();
+            }
+
+            renderDrivers() {
+                // Remove existing drivers
+                this.mapContainer.querySelectorAll('.euclidean-driver').forEach(el => el.remove());
+                
+                this.drivers.forEach((driver, index) => {
+                    const driverElement = document.createElement('div');
+                    driverElement.className = 'euclidean-location euclidean-driver available';
+                    driverElement.textContent = driver.id;
+                    driverElement.title = driver.name;
+                    driverElement.id = `driver-${driver.id}`;
+                    
+                    const position = this.coordToPixel(driver.lat, driver.lon);
+                    driverElement.style.left = position.x + 'px';
+                    driverElement.style.top = position.y + 'px';
+                    
+                    this.mapContainer.appendChild(driverElement);
+                });
+            }
+
+            coordToPixel(lat, lon) {
+                const mapWidth = this.mapContainer.offsetWidth;
+                const mapHeight = this.mapContainer.offsetHeight;
+                
+                const x = ((lon - this.mapBounds.minLon) / (this.mapBounds.maxLon - this.mapBounds.minLon)) * mapWidth;
+                const y = ((this.mapBounds.maxLat - lat) / (this.mapBounds.maxLat - this.mapBounds.minLat)) * mapHeight;
+                
+                return { x: x - 15, y: y - 15 }; // Offset untuk centering
+            }
+
+            euclideanDistance(lat1, lon1, lat2, lon2) {
+                const dx = lat2 - lat1;
+                const dy = lon2 - lon1;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            async findNearestDriver() {
+                if (this.isSearching) return;
+                
+                this.isSearching = true;
+                this.resetCalculationSteps();
+                
+                let nearestDriver = null;
+                let shortestDistance = Infinity;
+                let shortestDistanceKm = Infinity;
+                
+                // Reset semua driver ke status available
+                this.drivers.forEach(driver => {
+                    const driverElement = document.getElementById(`driver-${driver.id}`);
+                    if (driverElement) {
+                        driverElement.className = 'euclidean-location euclidean-driver available';
+                    }
+                });
+
+                // Hitung jarak untuk setiap driver
+                for (let i = 0; i < this.drivers.length; i++) {
+                    const driver = this.drivers[i];
+                    
+                    // Step 1: Selisih koordinat
+                    await this.animateCalculationStep(1, () => {
+                        const dx = driver.lat - this.store.lat;
+                        const dy = driver.lon - this.store.lon;
+                        
+                        document.getElementById('euclideanStep1Formula').innerHTML = `
+                            dx = ${driver.lat.toFixed(6)} - ${this.store.lat.toFixed(6)} = ${dx.toFixed(6)}<br>
+                            dy = ${driver.lon.toFixed(6)} - ${this.store.lon.toFixed(6)} = ${dy.toFixed(6)}
+                        `;
+                        document.getElementById('euclideanStep1Result').textContent = `dx = ${dx.toFixed(6)}, dy = ${dy.toFixed(6)}`;
+                    });
+
+                    // Step 2: Kuadrat selisih
+                    await this.animateCalculationStep(2, () => {
+                        const dx = driver.lat - this.store.lat;
+                        const dy = driver.lon - this.store.lon;
+                        const dx2 = dx * dx;
+                        const dy2 = dy * dy;
+                        
+                        document.getElementById('euclideanStep2Formula').innerHTML = `
+                            dx² = (${dx.toFixed(6)})² = ${dx2.toFixed(8)}<br>
+                            dy² = (${dy.toFixed(6)})² = ${dy2.toFixed(8)}
+                        `;
+                        document.getElementById('euclideanStep2Result').textContent = `dx² = ${dx2.toFixed(8)}, dy² = ${dy2.toFixed(8)}`;
+                    });
+
+                    // Step 3: Euclidean distance
+                    await this.animateCalculationStep(3, () => {
+                        const distance = this.euclideanDistance(this.store.lat, this.store.lon, driver.lat, driver.lon);
+                        
+                        document.getElementById('euclideanStep3Formula').innerHTML = `
+                            d = √(${((driver.lat - this.store.lat) * (driver.lat - this.store.lat)).toFixed(8)} + ${((driver.lon - this.store.lon) * (driver.lon - this.store.lon)).toFixed(8)})<br>
+                            d = √${(((driver.lat - this.store.lat) * (driver.lat - this.store.lat)) + ((driver.lon - this.store.lon) * (driver.lon - this.store.lon))).toFixed(8)}
+                        `;
+                        document.getElementById('euclideanStep3Result').textContent = `d = ${distance.toFixed(8)} derajat`;
+                    });
+
+                    // Step 4: Konversi ke kilometer
+                    await this.animateCalculationStep(4, () => {
+                        const distance = this.euclideanDistance(this.store.lat, this.store.lon, driver.lat, driver.lon);
+                        const distanceKm = distance * 111.39;
+                        
+                        document.getElementById('euclideanStep4Formula').innerHTML = `
+                            Jarak = ${distance.toFixed(8)} × 111.39<br>
+                            Jarak = ${distanceKm.toFixed(3)} km
+                        `;
+                        document.getElementById('euclideanStep4Result').textContent = `Jarak = ${distanceKm.toFixed(3)} km`;
+                        
+                        // Update driver status berdasarkan jarak
+                        const driverElement = document.getElementById(`driver-${driver.id}`);
+                        if (distanceKm <= this.searchRadius) {
+                            driverElement.className = 'euclidean-location euclidean-driver in-radius';
+                            
+                            if (distanceKm < shortestDistanceKm) {
+                                shortestDistance = distance;
+                                shortestDistanceKm = distanceKm;
+                                nearestDriver = driver;
+                            }
+                        } else {
+                            driverElement.className = 'euclidean-location euclidean-driver out-of-range';
+                        }
+                    });
+
+                    // Step 5: Filter radius
+                    await this.animateCalculationStep(5, () => {
+                        const distance = this.euclideanDistance(this.store.lat, this.store.lon, driver.lat, driver.lon);
+                        const distanceKm = distance * 111.39;
+                        
+                        const status = distanceKm <= this.searchRadius ? 'Driver tersedia' : 'Di luar jangkauan';
+                        const color = distanceKm <= this.searchRadius ? '#2e7d32' : '#d32f2f';
+                        
+                        document.getElementById('euclideanStep5Result').innerHTML = `
+                            <span style="color: ${color};">${driver.name}: ${distanceKm.toFixed(3)} km - ${status}</span>
+                        `;
+                    });
+
+                    await this.delay(500);
+                }
+
+                // Highlight driver terdekat
+                if (nearestDriver) {
+                    const nearestElement = document.getElementById(`driver-${nearestDriver.id}`);
+                    nearestElement.className = 'euclidean-location euclidean-driver nearest';
+                    
+                    // Show final result
+                    document.getElementById('euclideanResultDriver').textContent = nearestDriver.name;
+                    document.getElementById('euclideanResultDistance').textContent = `${shortestDistanceKm.toFixed(3)} km`;
+                    document.getElementById('euclideanResultTime').textContent = 'Driver Terdekat Ditemukan!';
+                    document.getElementById('euclideanFinalResult').classList.add('active');
+                }
+
+                this.updateDriverList();
+                this.isSearching = false;
+            }
+
+            async animateCalculationStep(stepNumber, callback) {
+                const step = document.getElementById(`euclideanStep${stepNumber}`);
+                step.classList.add('active');
+                
+                await this.delay(800);
+                callback();
+                await this.delay(600);
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            resetCalculationSteps() {
+                for (let i = 1; i <= 5; i++) {
+                    const step = document.getElementById(`euclideanStep${i}`);
+                    step.classList.remove('active');
+                    document.getElementById(`euclideanStep${i}Result`).textContent = 'Menunggu perhitungan...';
+                }
+                
+                document.getElementById('euclideanFinalResult').classList.remove('active');
+            }
+
+            updateDriverList() {
+                const driverList = document.getElementById('euclideanDriverList');
+                
+                if (this.drivers.length === 0) {
+                    driverList.innerHTML = '<div style="text-align: center; color: #6c757d; padding: 20px;">Daftar driver akan muncul di sini</div>';
+                    return;
+                }
+                
+                let html = '<div style="font-weight: bold; margin-bottom: 15px; color: #2c3e50;">📋 Daftar Driver:</div>';
+                
+                this.drivers.forEach(driver => {
+                    const distance = this.euclideanDistance(this.store.lat, this.store.lon, driver.lat, driver.lon);
+                    const distanceKm = distance * 111.39;
+                    const inRadius = distanceKm <= this.searchRadius;
+                    
+                    html += `
+                        <div style="padding: 10px; margin: 5px 0; border-radius: 8px; background: ${inRadius ? '#e8f5e8' : '#ffebee'}; border-left: 4px solid ${inRadius ? '#4caf50' : '#f44336'};">
+                            <div style="font-weight: bold; color: #2c3e50;">${driver.name}</div>
+                            <div style="font-size: 12px; color: #666;">
+                                Jarak: ${distanceKm.toFixed(3)} km
+                                ${inRadius ? ' ✅ Tersedia' : ' ❌ Di luar radius'}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                driverList.innerHTML = html;
+            }
+
+            resetSearch() {
+                this.drivers.forEach(driver => {
+                    const driverElement = document.getElementById(`driver-${driver.id}`);
+                    if (driverElement) {
+                        driverElement.className = 'euclidean-location euclidean-driver available';
+                    }
+                });
+                
+                this.resetCalculationSteps();
+                this.updateDriverList();
+            }
+        }
+
+        // Haversine Formula Implementation
+        class HaversineVisualizer {
+            constructor() {
+                this.mapContainer = document.getElementById('haversineMapContainer');
+                this.stores = [];
+                this.customer = { lat: 2.3305, lon: 99.0657, name: 'IT Del' }; // Koordinat IT Del
+                this.selectedStore = null;
+                this.isCalculating = false;
+                
+                // Area geografis Balige
+                this.mapBounds = {
+                    minLat: 2.310,
+                    maxLat: 2.360,
+                    minLon: 99.040,
+                    maxLon: 99.090
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.createStores();
+                this.createCustomer();
+                this.renderStores();
+                this.renderCustomer();
+                this.updateStoreList();
+                this.resetCalculationSteps();
+            }
+
+            createStores() {
+                this.stores = [
+                    { name: 'Toko Sari Roti', lat: 2.3425, lon: 99.0651 },
+                    { name: 'Minimarket 24', lat: 2.3387, lon: 99.0712 },
+                    { name: 'Warung Batak', lat: 2.3298, lon: 99.0834 },
+                    { name: 'Apotek Sehat', lat: 2.3156, lon: 99.0598 },
+                    { name: 'Toko Elektronik', lat: 2.3512, lon: 99.0523 }
+                ];
+            }
+
+            createCustomer() {
+                // Customer location (IT Del) sudah didefinisikan di constructor
+            }
+
+            renderStores() {
+                // Remove existing stores
+                this.mapContainer.querySelectorAll('.haversine-store').forEach(el => el.remove());
+                
+                this.stores.forEach((store, index) => {
+                    const storeElement = document.createElement('div');
+                    storeElement.className = 'haversine-location haversine-store';
+                    storeElement.textContent = '🏪';
+                    storeElement.title = store.name;
+                    storeElement.id = `haversine-store-${index}`;
+                    
+                    const position = this.coordToPixel(store.lat, store.lon);
+                    storeElement.style.left = position.x + 'px';
+                    storeElement.style.top = position.y + 'px';
+                    
+                    storeElement.addEventListener('click', () => this.selectStore(index));
+                    
+                    this.mapContainer.appendChild(storeElement);
+                });
+            }
+
+            renderCustomer() {
+                const existing = this.mapContainer.querySelector('.haversine-customer');
+                if (existing) existing.remove();
+                
+                const customerElement = document.createElement('div');
+                customerElement.className = 'haversine-location haversine-customer';
+                customerElement.textContent = '🎓';
+                customerElement.title = this.customer.name;
+                
+                const position = this.coordToPixel(this.customer.lat, this.customer.lon);
+                customerElement.style.left = position.x + 'px';
+                customerElement.style.top = position.y + 'px';
+                
+                this.mapContainer.appendChild(customerElement);
+            }
+
+            coordToPixel(lat, lon) {
+                const mapWidth = this.mapContainer.offsetWidth;
+                const mapHeight = this.mapContainer.offsetHeight;
+                
+                const x = ((lon - this.mapBounds.minLon) / (this.mapBounds.maxLon - this.mapBounds.minLon)) * mapWidth;
+                const y = ((this.mapBounds.maxLat - lat) / (this.mapBounds.maxLat - this.mapBounds.minLat)) * mapHeight;
+                
+                return { x: x - 17.5, y: y - 17.5 }; // Offset untuk centering
+            }
+
+            updateStoreList() {
+                const storeList = document.getElementById('haversineStoreList');
+                storeList.innerHTML = '';
+                
+                this.stores.forEach((store, index) => {
+                    const storeItem = document.createElement('div');
+                    storeItem.className = 'haversine-store-item';
+                    storeItem.innerHTML = `
+                        <div class="haversine-store-name">${store.name}</div>
+                        <div class="haversine-store-coords">${store.lat.toFixed(6)}, ${store.lon.toFixed(6)}</div>
+                    `;
+                    storeItem.addEventListener('click', () => this.selectStore(index));
+                    storeList.appendChild(storeItem);
+                });
+            }
+
+            selectStore(index) {
+                // Reset previous selection
+                document.querySelectorAll('.haversine-store').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll('.haversine-store-item').forEach(el => el.classList.remove('active'));
+                
+                // Select new store
+                this.selectedStore = this.stores[index];
+                document.querySelectorAll('.haversine-store')[index].classList.add('selected');
+                document.querySelectorAll('.haversine-store-item')[index].classList.add('active');
+                
+                this.resetCalculation();
+            }
+
+            // Implementasi Haversine Formula dari backend
+            haversine(lat1, lon1, lat2, lon2) {
+                const toRadians = (degrees) => degrees * (Math.PI / 180);
+                const R = 6371; // Radius bumi dalam kilometer
+                
+                const dLat = toRadians(lat2 - lat1);
+                const dLon = toRadians(lon2 - lon1);
+                
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                         Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                         Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                const distance = R * c;
+                
+                return {
+                    distance,
+                    dLat,
+                    dLon,
+                    a,
+                    c,
+                    lat1Rad: toRadians(lat1),
+                    lat2Rad: toRadians(lat2)
+                };
+            }
+
+            async calculateDistance() {
+                if (!this.selectedStore || this.isCalculating) {
+                    alert('Silakan pilih toko terlebih dahulu!');
+                    return;
+                }
+                
+                this.isCalculating = true;
+                this.resetCalculationSteps();
+                
+                const result = this.haversine(
+                    this.selectedStore.lat,
+                    this.selectedStore.lon,
+                    this.customer.lat,
+                    this.customer.lon
+                );
+                
+                // Step 1: Konversi ke Radian
+                await this.animateCalculationStep(1, () => {
+                    document.getElementById('haversineStep1Formula').innerHTML = `
+                        lat₁ = ${this.selectedStore.lat}° × π/180 = ${result.lat1Rad.toFixed(6)} rad<br>
+                        lat₂ = ${this.customer.lat}° × π/180 = ${result.lat2Rad.toFixed(6)} rad<br>
+                        dLat = ${result.dLat.toFixed(6)} rad<br>
+                        dLon = ${result.dLon.toFixed(6)} rad
+                    `;
+                    document.getElementById('haversineStep1Result').textContent = `dLat = ${result.dLat.toFixed(6)} rad, dLon = ${result.dLon.toFixed(6)} rad`;
+                });
+
+                // Step 2: Perhitungan Haversine (a)
+                await this.animateCalculationStep(2, () => {
+                    document.getElementById('haversineStep2Formula').innerHTML = `
+                        a = sin²(${result.dLat.toFixed(6)}/2) + cos(${result.lat1Rad.toFixed(6)}) × cos(${result.lat2Rad.toFixed(6)}) × sin²(${result.dLon.toFixed(6)}/2)<br>
+                        a = ${(Math.sin(result.dLat/2) * Math.sin(result.dLat/2)).toFixed(8)} + ${(Math.cos(result.lat1Rad) * Math.cos(result.lat2Rad) * Math.sin(result.dLon/2) * Math.sin(result.dLon/2)).toFixed(8)}
+                    `;
+                    document.getElementById('haversineStep2Result').textContent = `a = ${result.a.toFixed(8)}`;
+                });
+
+                // Step 3: Central Angle (c)
+                await this.animateCalculationStep(3, () => {
+                    document.getElementById('haversineStep3Formula').innerHTML = `
+                        c = 2 × atan2(√${result.a.toFixed(8)}, √${(1-result.a).toFixed(8)})<br>
+                        c = 2 × atan2(${Math.sqrt(result.a).toFixed(6)}, ${Math.sqrt(1-result.a).toFixed(6)})
+                    `;
+                    document.getElementById('haversineStep3Result').textContent = `c = ${result.c.toFixed(8)} radians`;
+                });
+
+                // Step 4: Jarak dalam Kilometer
+                await this.animateCalculationStep(4, () => {
+                    document.getElementById('haversineStep4Formula').innerHTML = `
+                        D = 6371 km × ${result.c.toFixed(8)}<br>
+                        D = ${result.distance.toFixed(3)} km
+                    `;
+                    document.getElementById('haversineStep4Result').textContent = `Jarak = ${result.distance.toFixed(3)} km`;
+                });
+
+                // Step 5: Perhitungan Biaya
+                await this.animateCalculationStep(5, () => {
+                    const cost = result.distance * 2000;
+                    document.getElementById('haversineStep5Formula').innerHTML = `
+                        Biaya = ${result.distance.toFixed(3)} km × Rp 2.000<br>
+                        Biaya = Rp ${cost.toLocaleString('id-ID')}
+                    `;
+                    document.getElementById('haversineStep5Result').innerHTML = `<span style="color: #2e7d32;">Biaya = Rp ${cost.toLocaleString('id-ID')}</span>`;
+                });
+
+                // Show final result
+                const cost = result.distance * 2000;
+                document.getElementById('haversineResultDistance').textContent = `${result.distance.toFixed(3)} km`;
+                document.getElementById('haversineResultCost').textContent = `Rp ${cost.toLocaleString('id-ID')}`;
+                document.getElementById('haversineResultFormula').textContent = `${this.selectedStore.name} → ${this.customer.name}`;
+                document.getElementById('haversineFinalResult').classList.add('active');
+
+                // Draw distance line
+                this.drawDistanceLine();
+                
+                this.isCalculating = false;
+            }
+
+            drawDistanceLine() {
+                // Remove existing lines
+                this.mapContainer.querySelectorAll('.haversine-distance-line, .haversine-distance-label').forEach(el => el.remove());
+                
+                if (!this.selectedStore) return;
+                
+                const storePos = this.coordToPixel(this.selectedStore.lat, this.selectedStore.lon);
+                const customerPos = this.coordToPixel(this.customer.lat, this.customer.lon);
+                
+                const dx = customerPos.x - storePos.x;
+                const dy = customerPos.y - storePos.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                
+                const line = document.createElement('div');
+                line.className = 'haversine-distance-line';
+                line.style.left = (storePos.x + 17.5) + 'px';
+                line.style.top = (storePos.y + 17.5) + 'px';
+                line.style.width = distance + 'px';
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                this.mapContainer.appendChild(line);
+
+                // Add distance label
+                const result = this.haversine(
+                    this.selectedStore.lat,
+                    this.selectedStore.lon,
+                    this.customer.lat,
+                    this.customer.lon
+                );
+                
+                const label = document.createElement('div');
+                label.className = 'haversine-distance-label';
+                label.textContent = `${result.distance.toFixed(2)} km`;
+                label.style.left = (storePos.x + dx/2 + 17.5) + 'px';
+                label.style.top = (storePos.y + dy/2 + 17.5) + 'px';
+                
+                this.mapContainer.appendChild(label);
+            }
+
+            async animateCalculationStep(stepNumber, callback) {
+                const step = document.getElementById(`haversineStep${stepNumber}`);
+                step.classList.add('active');
+                
+                await this.delay(800);
+                callback();
+                await this.delay(600);
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            resetCalculationSteps() {
+                for (let i = 1; i <= 5; i++) {
+                    const step = document.getElementById(`haversineStep${i}`);
+                    step.classList.remove('active');
+                    document.getElementById(`haversineStep${i}Result`).textContent = 'Menunggu perhitungan...';
+                }
+                
+                document.getElementById('haversineFinalResult').classList.remove('active');
+                
+                // Remove distance lines
+                this.mapContainer.querySelectorAll('.haversine-distance-line, .haversine-distance-label').forEach(el => el.remove());
+            }
+
+            resetCalculation() {
+                this.resetCalculationSteps();
+            }
+        }
+
+        // Global variables for visualizers
+        let euclideanVisualizer;
+        let haversineVisualizer;
+
+        function initEuclidean() {
+            if (!euclideanVisualizer) {
+                euclideanVisualizer = new EuclideanVisualizer();
+            }
+        }
+
+        function initHaversine() {
+            if (!haversineVisualizer) {
+                haversineVisualizer = new HaversineVisualizer();
+            }
+        }
+
+        // Euclidean functions
+        function euclideanFindNearestDriver() {
+            if (euclideanVisualizer) {
+                euclideanVisualizer.findNearestDriver();
+            }
+        }
+
+        function euclideanResetSearch() {
+            if (euclideanVisualizer) {
+                euclideanVisualizer.resetSearch();
+            }
+        }
+
+        function euclideanGenerateRandomDrivers() {
+            if (euclideanVisualizer) {
+                euclideanVisualizer.generateRandomDrivers();
+            }
+        }
+
+        // Haversine functions
+        function haversineCalculateDistance() {
+            if (haversineVisualizer) {
+                haversineVisualizer.calculateDistance();
+            }
+        }
+
+        function haversineResetCalculation() {
+            if (haversineVisualizer) {
+                haversineVisualizer.resetCalculation();
+            }
+        }
+
+        // Initialize home tab on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Home tab is already active by default
+        });
+    </script>
+</body>
+</html>
