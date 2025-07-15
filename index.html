@@ -2,7 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Del-Pick - Visualisasi Algoritma Euclidean Distance & Haversine</title>
     <style>
         * {
@@ -11,10 +14,39 @@
             box-sizing: border-box;
         }
 
+        /* Mobile Optimization Base */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Touch Device Optimizations */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input, textarea, [contenteditable] {
+            -webkit-user-select: auto;
+            -khtml-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
         }
 
         /* Header Styles */
@@ -916,7 +948,32 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
+        
+        /* Extra Large Desktop (1440px+) */
+        @media (min-width: 1440px) {
+            .content-container {
+                max-width: 1800px;
+            }
+            
+            .euclidean-main-content,
+            .haversine-main-content {
+                grid-template-columns: 1.3fr 1fr;
+            }
+        }
+
+        /* Large Desktop (1200px - 1439px) */
+        @media (max-width: 1439px) {
+            .main-logo {
+                font-size: 38px;
+            }
+            
+            .main-subtitle {
+                font-size: 18px;
+            }
+        }
+
+        /* Medium Desktop/Laptop (992px - 1199px) */
+        @media (max-width: 1199px) {
             .euclidean-main-content,
             .haversine-main-content {
                 grid-template-columns: 1fr;
@@ -927,43 +984,597 @@
                 border-right: none;
                 border-bottom: 1px solid #dee2e6;
             }
+            
+            .euclidean-map-container,
+            .haversine-map-container {
+                height: 400px;
+            }
+            
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .feature-card {
+                padding: 25px;
+            }
         }
 
-        @media (max-width: 768px) {
+        /* Tablet (768px - 991px) */
+        @media (max-width: 991px) {
+            .main-logo {
+                font-size: 32px;
+            }
+            
+            .main-subtitle {
+                font-size: 16px;
+            }
+            
+            .nav-tab {
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+            
+            .home-content {
+                padding: 30px 20px;
+            }
+            
+            .hero-section {
+                padding: 40px 20px;
+                margin-bottom: 40px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-description {
+                font-size: 18px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+            
+            .euclidean-header,
+            .haversine-header {
+                padding: 25px 20px;
+            }
+            
+            .euclidean-logo,
+            .haversine-logo {
+                font-size: 32px;
+            }
+            
+            .euclidean-subtitle,
+            .haversine-subtitle {
+                font-size: 16px;
+            }
+            
+            .euclidean-map-section,
+            .haversine-map-section,
+            .euclidean-calculation-section,
+            .haversine-calculation-section {
+                padding: 20px;
+            }
+            
+            .euclidean-section-title,
+            .haversine-section-title {
+                font-size: 20px;
+            }
+        }
+
+        /* Mobile Large (576px - 767px) */
+        @media (max-width: 767px) {
             .content-container {
-                margin: 10px;
+                margin: 0;
             }
             
             .nav-tabs {
                 flex-direction: column;
             }
             
-            .euclidean-legend,
-            .haversine-legend {
+            .nav-tab {
+                border-bottom: 1px solid #dee2e6;
+                border-radius: 0;
+            }
+            
+            .nav-tab.active {
+                border-bottom: 3px solid #3498db;
+            }
+            
+            .home-content {
+                padding: 20px 15px;
+            }
+            
+            .hero-section {
+                padding: 30px 15px;
+                margin-bottom: 30px;
+                border-radius: 15px;
+            }
+            
+            .hero-title {
+                font-size: 28px;
+                margin-bottom: 15px;
+            }
+            
+            .hero-description {
+                font-size: 16px;
+            }
+            
+            .problem-solution-section {
+                padding: 25px 20px;
+                margin-bottom: 25px;
+                border-radius: 15px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
+                margin: 20px 0;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .stat-number {
+                font-size: 28px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .feature-icon {
+                font-size: 40px;
+            }
+            
+            .feature-title {
+                font-size: 20px;
+            }
+            
+            .euclidean-header,
+            .haversine-header {
+                padding: 20px 15px;
+            }
+            
+            .euclidean-logo,
+            .haversine-logo {
+                font-size: 28px;
+            }
+            
+            .euclidean-subtitle,
+            .haversine-subtitle {
+                font-size: 14px;
+            }
+            
+            .euclidean-map-section,
+            .haversine-map-section,
+            .euclidean-calculation-section,
+            .haversine-calculation-section {
+                padding: 15px;
+            }
+            
+            .euclidean-section-title,
+            .haversine-section-title {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            
+            .euclidean-map-container,
+            .haversine-map-container {
+                height: 300px;
+                margin-bottom: 15px;
             }
             
             .euclidean-controls,
             .haversine-controls {
                 flex-direction: column;
                 gap: 10px;
+                margin: 15px 0;
+            }
+            
+            .euclidean-btn,
+            .haversine-btn {
+                padding: 15px 20px;
+                font-size: 14px;
+                border-radius: 30px;
             }
             
             .euclidean-driver-list,
             .haversine-store-list {
                 max-height: 200px;
+                padding: 15px;
+                margin-bottom: 15px;
             }
-
-            .features-grid {
+            
+            .euclidean-legend,
+            .haversine-legend {
                 grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+                margin-top: 15px;
             }
-
-            .hero-title {
-                font-size: 36px;
+            
+            .euclidean-legend-item,
+            .haversine-legend-item {
+                font-size: 12px;
+                justify-content: center;
             }
-
-            .hero-description {
+            
+            .euclidean-calculation-steps,
+            .haversine-calculation-steps {
+                max-height: 250px;
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .euclidean-step-formula,
+            .haversine-step-formula {
+                font-size: 12px;
+                padding: 10px;
+            }
+            
+            .euclidean-algorithm-info,
+            .haversine-algorithm-info {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .euclidean-algorithm-title,
+            .haversine-algorithm-title {
                 font-size: 18px;
+            }
+            
+            .euclidean-performance-info {
+                padding: 12px;
+                margin-top: 15px;
+            }
+        }
+
+        /* Mobile Small (320px - 575px) */
+        @media (max-width: 575px) {
+            .main-header {
+                padding: 15px 10px;
+            }
+            
+            .main-logo {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            
+            .main-subtitle {
+                font-size: 12px;
+            }
+            
+            .nav-tab {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+            
+            .home-content {
+                padding: 15px 10px;
+            }
+            
+            .hero-section {
+                padding: 20px 10px;
+                margin-bottom: 20px;
+            }
+            
+            .hero-title {
+                font-size: 24px;
+            }
+            
+            .hero-description {
+                font-size: 14px;
+            }
+            
+            .problem-solution-section {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
+            }
+            
+            .stat-label {
+                font-size: 12px;
+            }
+            
+            .feature-card {
+                padding: 15px;
+            }
+            
+            .feature-icon {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+            
+            .feature-title {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .feature-description {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            
+            .euclidean-header,
+            .haversine-header {
+                padding: 15px 10px;
+            }
+            
+            .euclidean-logo,
+            .haversine-logo {
+                font-size: 24px;
+            }
+            
+            .euclidean-subtitle,
+            .haversine-subtitle {
+                font-size: 12px;
+            }
+            
+            .euclidean-map-section,
+            .haversine-map-section,
+            .euclidean-calculation-section,
+            .haversine-calculation-section {
+                padding: 10px;
+            }
+            
+            .euclidean-section-title,
+            .haversine-section-title {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            
+            .euclidean-map-container,
+            .haversine-map-container {
+                height: 250px;
+                margin-bottom: 10px;
+            }
+            
+            .euclidean-btn,
+            .haversine-btn {
+                padding: 12px 15px;
+                font-size: 12px;
+                border-radius: 25px;
+            }
+            
+            .euclidean-driver-list,
+            .haversine-store-list {
+                max-height: 150px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .euclidean-legend,
+            .haversine-legend {
+                padding: 10px;
+                margin-top: 10px;
+            }
+            
+            .euclidean-legend-item,
+            .haversine-legend-item {
+                font-size: 11px;
+            }
+            
+            .euclidean-legend-icon,
+            .haversine-legend-icon {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .euclidean-calculation-steps,
+            .haversine-calculation-steps {
+                max-height: 200px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .euclidean-step-number,
+            .haversine-step-number {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 12px;
+                margin-right: 10px;
+            }
+            
+            .euclidean-step-formula,
+            .haversine-step-formula {
+                font-size: 11px;
+                padding: 8px;
+            }
+            
+            .euclidean-step-result,
+            .haversine-step-result {
+                font-size: 12px;
+                padding: 8px;
+            }
+            
+            .euclidean-algorithm-info,
+            .haversine-algorithm-info {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .euclidean-algorithm-title,
+            .haversine-algorithm-title {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            
+            .euclidean-algorithm-desc,
+            .haversine-algorithm-desc {
+                font-size: 12px;
+            }
+            
+            .euclidean-final-result,
+            .haversine-final-result {
+                padding: 15px;
+                margin-top: 10px;
+            }
+            
+            .euclidean-result-driver {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .euclidean-result-distance {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            
+            .euclidean-result-time {
+                font-size: 14px;
+            }
+            
+            .haversine-result-distance {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            
+            .haversine-result-cost {
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+            
+            .haversine-result-formula {
+                font-size: 12px;
+            }
+            
+            .euclidean-performance-info {
+                padding: 10px;
+                margin-top: 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .euclidean-btn,
+            .haversine-btn,
+            .nav-tab {
+                min-height: 44px; /* iOS minimum touch target */
+            }
+            
+            .euclidean-location,
+            .haversine-location {
+                min-width: 30px;
+                min-height: 30px;
+            }
+            
+            .euclidean-store-item,
+            .haversine-store-item {
+                min-height: 44px;
+                padding: 12px 15px;
+            }
+        }
+
+        /* High DPI Display Optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .euclidean-location,
+            .haversine-location {
+                border-width: 2px;
+            }
+        }
+
+        /* Landscape Mobile Optimizations */
+        @media (max-width: 767px) and (orientation: landscape) {
+            .euclidean-map-container,
+            .haversine-map-container {
+                height: 200px;
+            }
+            
+            .euclidean-calculation-steps,
+            .haversine-calculation-steps {
+                max-height: 150px;
+            }
+            
+            .euclidean-driver-list,
+            .haversine-store-list {
+                max-height: 120px;
+            }
+        }
+
+        /* iOS Safari Specific Optimizations */
+        @supports (-webkit-touch-callout: none) {
+            .content-container {
+                min-height: -webkit-fill-available;
+            }
+            
+            .euclidean-calculation-steps,
+            .haversine-calculation-steps,
+            .euclidean-driver-list,
+            .haversine-store-list {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Accessibility Improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* Better Focus States for Keyboard Navigation */
+        .nav-tab:focus-visible,
+        .euclidean-btn:focus-visible,
+        .haversine-btn:focus-visible {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav-container,
+            .euclidean-controls,
+            .haversine-controls {
+                display: none;
+            }
+            
+            .content-container {
+                background: white;
+                box-shadow: none;
+            }
+            
+            .euclidean-main-content,
+            .haversine-main-content {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1473,7 +2084,11 @@
                 const x = ((lon - this.mapBounds.minLon) / (this.mapBounds.maxLon - this.mapBounds.minLon)) * mapWidth;
                 const y = ((this.mapBounds.maxLat - lat) / (this.mapBounds.maxLat - this.mapBounds.minLat)) * mapHeight;
                 
-                return { x: x - 15, y: y - 15 }; // Offset untuk centering
+                // Mobile-optimized centering
+                const isMobile = window.innerWidth <= 768;
+                const offset = isMobile ? 12 : 15;
+                
+                return { x: x - offset, y: y - offset };
             }
 
             euclideanDistance(lat1, lon1, lat2, lon2) {
@@ -1751,7 +2366,11 @@
                 const x = ((lon - this.mapBounds.minLon) / (this.mapBounds.maxLon - this.mapBounds.minLon)) * mapWidth;
                 const y = ((this.mapBounds.maxLat - lat) / (this.mapBounds.maxLat - this.mapBounds.minLat)) * mapHeight;
                 
-                return { x: x - 17.5, y: y - 17.5 }; // Offset untuk centering
+                // Mobile-optimized centering
+                const isMobile = window.innerWidth <= 768;
+                const offset = isMobile ? 15 : 17.5;
+                
+                return { x: x - offset, y: y - offset };
             }
 
             updateStoreList() {
@@ -2008,6 +2627,46 @@
         // Initialize home tab on page load
         document.addEventListener('DOMContentLoaded', function() {
             // Home tab is already active by default
+            
+            // Add window resize handler for responsive updates
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    // Refresh visualizers on resize for better mobile experience
+                    if (euclideanVisualizer && document.getElementById('euclidean').classList.contains('active')) {
+                        euclideanVisualizer.renderStore();
+                        euclideanVisualizer.renderDrivers();
+                    }
+                    if (haversineVisualizer && document.getElementById('haversine').classList.contains('active')) {
+                        haversineVisualizer.renderStores();
+                        haversineVisualizer.renderCustomer();
+                    }
+                }, 250);
+            });
+            
+            // Prevent zoom on double tap for iOS
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Improve scroll performance on mobile
+            let ticking = false;
+            function updateScrolling() {
+                ticking = false;
+            }
+            
+            document.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(updateScrolling);
+                    ticking = true;
+                }
+            }, { passive: true });
         });
     </script>
 </body>
